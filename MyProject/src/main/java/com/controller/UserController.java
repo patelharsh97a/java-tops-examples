@@ -19,16 +19,30 @@ public class UserController extends HttpServlet {
 		
 		if(action.equalsIgnoreCase("sign up"))
 		{
-			User u=new User();
-			u.setFname(request.getParameter("fname"));
-			u.setLname(request.getParameter("lname"));
-			u.setEmail(request.getParameter("email"));
-			u.setMobile(Long.parseLong(request.getParameter("mobile")));
-			u.setAddress(request.getParameter("address"));
-			u.setPassword(request.getParameter("password"));
-			UserDao.signupUser(u);
-			request.setAttribute("msg", "User Sign Up Successfull");
-			request.getRequestDispatcher("signup.jsp").forward(request, response);
+			boolean flag=UserDao.checkEmail(request.getParameter("email"));
+			if(flag==true)
+			{
+				request.setAttribute("msg", "Email Already Registered");
+				request.getRequestDispatcher("signup.jsp").forward(request, response);
+			}
+			else if(request.getParameter("password").equals(request.getParameter("cpassword")))
+			{
+				User u=new User();
+				u.setFname(request.getParameter("fname"));
+				u.setLname(request.getParameter("lname"));
+				u.setEmail(request.getParameter("email"));
+				u.setMobile(Long.parseLong(request.getParameter("mobile")));
+				u.setAddress(request.getParameter("address"));
+				u.setPassword(request.getParameter("password"));
+				UserDao.signupUser(u);
+				request.setAttribute("msg", "User Sign Up Successfull");
+				request.getRequestDispatcher("signup.jsp").forward(request, response);
+			}
+			else
+			{
+				request.setAttribute("msg", "Password & Confirm Password Does Not Matched");
+				request.getRequestDispatcher("signup.jsp").forward(request, response);
+			}
 		}
 	}
 

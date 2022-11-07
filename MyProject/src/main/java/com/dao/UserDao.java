@@ -2,6 +2,7 @@ package com.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import com.bean.User;
 import com.util.ProjectUtil;
@@ -24,5 +25,24 @@ public class UserDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public static boolean checkEmail(String email)
+	{
+		boolean flag=false;
+		try {
+			Connection conn=ProjectUtil.createConnection();
+			String sql="select * from user where email=?";
+			PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setString(1, email);
+			ResultSet rs=pst.executeQuery();
+			if(rs.next())
+			{
+				flag=true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return flag;
 	}
 }
